@@ -1,0 +1,35 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+  color: #888;
+}
+
+.card {
+  padding: 2em;
+}
+
+.text-body {
+  color: #888;
+}
+
+.bottom-interaction {
+  width: 86%;
+  margin: 7%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #root {
+    padding: 0px;
+  }
+
+  .card {
+    padding: 0em;
+  }
+
+  /* .bottom-interaction {
+    width: 90%;
+    margin: 10%;
+  } */
+}
