@@ -1,0 +1,58 @@
+.horizontal-stack {
+  gap: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+}
+
+.horizontal-stack > :last-child {
+  margin-left: auto; /* pushes the last item right */
+}
+
+.icons {
+  color: #c3c3c3;
+}
+
+.divider {
+  height: 1.5px;
+  background-color: #c3c3c3;
+  margin: 12px 0;
+}
+
+.content {
+  padding: 0;
+  margin: 0;
+}
+
+.accordion-item {
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background-color: #fff;
+  width: 80%;
+  margin: 18px auto;
+}
+
+.accordion-header {
+  padding: 20px;
+  cursor: pointer;
+  user-select: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.accordion-panel {
+  padding: 20px;
+}
+
+.chevron {
+  transition: transform 0.5s ease;
+
+  &.active {
+    transform: rotate(180deg);
+  }
+}

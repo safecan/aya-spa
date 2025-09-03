@@ -17,6 +17,7 @@
   perspective: 1000px;
   aspect-ratio: 4/3;
   margin: 0;
+  position: relative;
 }
 
 .slide-content img {
@@ -25,10 +26,11 @@
   object-fit: cover;
   aspect-ratio: 4/3;
   will-change: transform;
-  border-radius: 20px;
+  border-radius: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   transform-style: preserve-3d;
+  display: block;
 }
 
 /* Navigation arrows */

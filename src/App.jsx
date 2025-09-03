@@ -6,9 +6,14 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import Carousel from "./components/swiper/carousel";
-import AccordionArray from "./components/accordion/AccordionArray";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionPanel,
+} from "./components/accordion/Accordion";
 
-import { FiMapPin } from "react-icons/fi";
+import { FiMapPin, FiCheckSquare, FiClock } from "react-icons/fi";
 
 function App() {
   const customImages = [
@@ -23,36 +28,50 @@ function App() {
     "src/assets/aya-photos/aya9.webp",
   ];
 
-  const accordionData = [
-    {
-      title: "Lugar",
-      icon: "FiMapPin",
-      content: <img src="src/assets/aya-photos/aya1.webp" alt="Lugar" />,
-    },
-    // {
-    //   title: "Itinerario",
-    //   icon: '<i class="fas fa-cogs"></i>',
-    //   content: "<p> Your content here </p>",
-    // },
-    // {
-    //   title: "Confirmar Asistencia",
-    //   icon: '<i class="fas fa-cogs"></i>',
-    //   content: "<p> Your content here </p>",
-    // }
-  ];
-  const onlyItem = {
-    title: "Lugar",
-    icon: FiMapPin,
-    content: <p>Plaza de la Villa, 1, 28005 Madrid</p>,
-  };
-
   return (
     <>
       <h1>Alba y Andrea</h1>
-      <Carousel images={customImages} />
-      <div className="bottom-interaction">
-        <AccordionArray item={onlyItem} />
-      </div>
+      
+      <section>
+        <Carousel images={customImages} />  
+      </section>
+      <br />
+      <section>
+        <Accordion>
+          <AccordionItem>
+            <AccordionHeader FiIcon={FiMapPin} Title="Lugar" />
+
+            <AccordionPanel>
+              <p>Plaza de la Villa, 1, 28005 Madrid</p>
+            </AccordionPanel>
+
+          </AccordionItem>
+          
+          <AccordionItem>
+            <AccordionHeader FiIcon={FiClock} Title="Itinerario" />
+
+            <AccordionPanel>
+              <li> Recepción </li>
+              <li> Ceremonia </li>
+              <li> Banquete </li>
+            </AccordionPanel>
+
+          </AccordionItem>
+          
+          <AccordionItem>
+            <AccordionHeader FiIcon={FiCheckSquare} Title="Confirmar Asistencia" />
+
+            <AccordionPanel>
+              <li> Nombre </li>
+              <li> Bus </li>
+              <li> Menú </li>
+            </AccordionPanel>
+
+          </AccordionItem>
+        
+        </Accordion>
+      </section>
+      <br />
     </>
   );
 }
