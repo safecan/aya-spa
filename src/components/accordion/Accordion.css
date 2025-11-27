@@ -46,7 +46,7 @@
 }
 
 .accordion-panel {
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }
 
 .chevron {
@@ -54,5 +54,12 @@
 
   &.active {
     transform: rotate(180deg);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .accordion-item {
+    width: 90%;
   }
 }

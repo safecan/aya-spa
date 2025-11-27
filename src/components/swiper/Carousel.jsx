@@ -10,7 +10,7 @@ const Carousel = ({ images = [] }) => {
   return (
     <Swiper
       modules={[Navigation, Pagination, Autoplay, Parallax]}
-      slidesPerView={1}
+      slidesPerView={3}
       pagination={{ clickable: true }}
       autoplay={{
         delay: 3500,
@@ -18,17 +18,13 @@ const Carousel = ({ images = [] }) => {
       }}
       loop={true}
       parallax={true}
-      speed={1350}
-      style={{
-        aspectRatio: "4/3",
-        maxWidth: "900px",
-        margin: "0",
-        overflow: "visible",
-      }}
+      spaceBetween={400}
+      speed={1500}
       centeredSlides={true}
       breakpoints={{
         // When window width is >= 320px
         320: {
+          slidesPerView: 1,
           navigation: false,
         },
         // When window width is >= 769px
@@ -42,17 +38,14 @@ const Carousel = ({ images = [] }) => {
     >
       {images.map((imageSrc, index) => (
         <SwiperSlide key={index}>
-          <div className="slide-content" data-swiper-parallax-opacity="0.5">
             <img
               src={imageSrc}
               alt={`Foto de Alba y Andrea ${index + 1}`}
               data-swiper-parallax="-40%"
               data-swiper-parallax-scale="0.6"
             />
-          </div>
         </SwiperSlide>
       ))}
-      <br/>
     </Swiper>
   );
 };
