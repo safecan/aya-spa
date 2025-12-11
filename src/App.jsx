@@ -6,13 +6,14 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import Carousel from "./components/swiper/Carousel";
+import CarouselMini from "./components/swiper/CarouselMini";
 import {
   Accordion,
   AccordionItem,
   AccordionHeader,
   AccordionPanel,
 } from "./components/accordion/Accordion";
-
+import ButtonPrimary from "./components/button/ButtonPrimary";
 import { FiMapPin, FiCheckSquare, FiClock } from "react-icons/fi";
 import {
   TextField,
@@ -23,74 +24,209 @@ import {
   Box,
   Collapse,
 } from "@mui/material";
-import { Person } from "@mui/icons-material";
+import { Person, MarkEmailRead, Padding } from "@mui/icons-material";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
-import { MUISwitchCustom } from "./components/mui-switch/SwitchCustom.jsx";
 
 function App() {
-  const customImages = [
-    "src/assets/aya-photos/aya1.webp",
-    "src/assets/aya-photos/aya2.webp",
-    "src/assets/aya-photos/aya3.webp",
-    "src/assets/aya-photos/aya4.webp",
-    "src/assets/aya-photos/aya5.webp",
-    "src/assets/aya-photos/aya6.webp",
-    "src/assets/aya-photos/aya7.webp",
-    "src/assets/aya-photos/aya8.webp",
-    "src/assets/aya-photos/aya9.webp",
+  // #region Form state and handlers
+  const imgArrayCarouselAYA = [
+    "src/assets/carousel/aya1.webp",
+    "src/assets/carousel/aya2.webp",
+    "src/assets/carousel/aya3.webp",
+    "src/assets/carousel/aya4.webp",
+    "src/assets/carousel/aya5.webp",
+    "src/assets/carousel/aya6.webp",
+    "src/assets/carousel/aya7.webp",
+    "src/assets/carousel/aya8.webp",
+    "src/assets/carousel/aya9.webp",
   ];
 
-  const [radioValueMenu, setRadioValueMenu] = React.useState();
-  const handleChangeRadioValueMenu = (event) => {
-    setRadioValueMenu(event.target.value);
+  const imgArrayCarouselRonesa = [
+    "src/assets/carousel/aya-ronesa1.webp",
+    "src/assets/carousel/aya-ronesa2.webp",
+    "src/assets/carousel/aya-ronesa3.webp",
+    "src/assets/carousel/aya-ronesa4.webp",
+    "src/assets/carousel/aya-ronesa5.webp",
+    "src/assets/carousel/aya-ronesa6.webp",
+    "src/assets/carousel/aya-ronesa7.webp",
+  ];
+
+  const [fullName, setFullName] = React.useState("");
+  const [validName, setValidName] = React.useState(0);
+  const handleChangeNameValue = (event) => {
+    var valid = event.target.value.trim().length >= 3 ? 1 : -1;
+    setValidName(valid);
+    setFullName(event.target.value);
   };
 
-  const [busSwitchChecked, setBusSwitch] = React.useState(false);
-  const handleBusSwitchChange = (event) => {
-    setBusSwitch(event.target.checked);
+  const [radioValueMenu, setRVMenu] = React.useState("");
+  const handleChangeRVMenu = (event) => {
+    setRVMenu(event.target.value);
+  };
 
-    if (!event.target.checked) {
-      setRadioValueBus("");
+  const [foodOther, setFoodOther] = React.useState("");
+  const [validFoodOther, setValidFoodOther] = React.useState(0);
+  const handleChangeFoodOther = (event) => {
+    var valid = event.target.value.trim().length >= 3 ? 1 : -1;
+    setValidFoodOther(valid);
+    setFoodOther(event.target.value);
+  };
+
+  const [radioValueBusNeeded, setRVBusNeeded] = React.useState("");
+  const handleChangeRVBusNeeded = (event) => {
+    setRVBusNeeded(event.target.value);
+
+    if (!event.target.value) {
+      setRVBusLocation();
+      setRVBusSchedule();
     }
   };
 
-  const [radioValueBus, setRadioValueBus] = React.useState();
-  const handleChangeRadioValueBus = (event) => {
-    setRadioValueBus(event.target.value);
+  const [radioValueBusLocation, setRVBusLocation] = React.useState("");
+  const handleChangeRVBusLocation = (event) => {
+    setRVBusLocation(event.target.value);
   };
+
+  const [radioValueBusSchedule, setRVBusSchedule] = React.useState("");
+  const handleChangeRVBusSchedule = (event) => {
+    setRVBusSchedule(event.target.value);
+  };
+
+  const validateForm = () => {
+    if (validName !== 1) {
+      setValidName(-1);
+      return false;
+    }
+
+    if (!radioValueMenu) {
+      setRVMenu(null);
+      return false;
+    } else {
+      if (radioValueMenu === "other" && validFoodOther !== 1) {
+        setValidFoodOther(-1);
+        return false;
+      }
+    }
+
+    if (!radioValueBusNeeded) {
+      setRVBusNeeded(null);
+      return false;
+    } else if (radioValueBusNeeded === "yes") {
+      if (!radioValueBusLocation) {
+        setRVBusLocation(null);
+        return false;
+      }
+
+      if (!radioValueBusSchedule) {
+        setRVBusSchedule(null);
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (!validateForm()) return;
+
+    const payload = {
+      nombre: fullName.trim(),
+      intolerancias:
+        radioValueMenu === "other" ? foodOther.trim() : radioValueMenu,
+      bus:
+        radioValueBusNeeded === "yes"
+          ? {
+              salida: radioValueBusLocation,
+              vuelta: radioValueBusSchedule,
+            }
+          : null,
+    };
+
+    console.log("Payload:", payload);
+
+    // sendToAPI(payload);
+  };
+
+  const sendToAPI = async (data) => {
+    try {
+      const response = await fetch("https://your-api.com/endpoint", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Respuesta de red KO");
+
+      const result = await response.json();
+      alert("¡Asistencia confirmada!");
+      // Reset form or redirect
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al confirmar asistencia. Por favor intenta de nuevo.");
+    }
+  };
+
+  // #endregion
 
   return (
     <>
       <img
         className="title-desktop"
-        src="src/assets/aya-photos/aya-title-desktop-s.png"
+        src="src/assets/aya-title-desktop-s.png"
         alt="Alba y Andrea"
       />
-      <Carousel images={customImages} />
-      <br />
+
+      <Carousel images={imgArrayCarouselAYA} />
+
       <div className="form">
         <Accordion>
+          {/* -> LUGAR <- */}
           <AccordionItem>
             <AccordionHeader FiIcon={FiMapPin} Title="Lugar" />
-
             <AccordionPanel>
-              <p>Plaza de la Villa, 1, 28005 Madrid</p>
+              <div className="location">
+                <div className="column">
+                  <img
+                    src="src/assets/aya-ronesa-title.webp"
+                    alt="Finca Ronesa"
+                    className="ronesa-title"
+                  />
+                  <div className="ronesa-info">
+                    <p>Barranco de Ronesa, 03109 Tibi, Alicante</p>
+                    <a
+                      href="https://maps.app.goo.gl/Ud8JpthzcA67cJ2f6"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Cómo llegar
+                    </a>
+                  </div>
+                </div>
+                <div className="column">
+                  <CarouselMini images={imgArrayCarouselRonesa} />
+                </div>
+              </div>
             </AccordionPanel>
           </AccordionItem>
 
+          {/* -> ITINERARIO <- */}
           <AccordionItem>
             <AccordionHeader FiIcon={FiClock} Title="Itinerario" />
-
             <AccordionPanel>
-              <li> Recepción </li>
-              <li> Ceremonia </li>
-              <li> Banquete </li>
+              <img
+                src="src/assets/aya-schedule-final.png"
+                alt="Itinerario"
+                className="schedule"
+              />
             </AccordionPanel>
           </AccordionItem>
 
+          {/* -> CONFIRMAR ASISTENCIA <- */}
           <AccordionItem>
             <AccordionHeader
               FiIcon={FiCheckSquare}
@@ -98,24 +234,46 @@ function App() {
             />
             <AccordionPanel>
               <Box
-                sx={{ display: "flex", alignItems: "flex-end", maxHeight: 32 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  maxHeight: 32,
+                  mb: 2,
+                  mt: validName === -1 ? 3 : 1,
+                }}
               >
-                <Person sx={{ color: "action.active", mr: 2, my: 0.1 }} />
+                {/* -> NOMBRE <- */}
+                <Person
+                  sx={{
+                    color: "action.active",
+                    mr: 2,
+                    mb: validName === -1 ? 3 : 0,
+                  }}
+                />
                 <TextField
                   fullWidth
                   id="tf-fullname"
                   label="Nombre completo"
                   variant="standard"
+                  value={fullName}
+                  onChange={handleChangeNameValue}
+                  error={validName === -1}
+                  helperText={
+                    validName === -1 ? "Este campo es obligatorio" : ""
+                  }
                 />
               </Box>
-              <br />
-              <br />
-              <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-                <RestaurantIcon
-                  sx={{ color: "action.active", mr: 2, my: 0.1 }}
-                />
+              {/* -> INTOLERANCIAS <- */}
+              <Box sx={{ display: "flex", alignItems: "flex-start", mt: 3 }}>
+                <RestaurantIcon sx={{ color: "action.active", mr: 2 }} />
                 <FormControl sx={{ width: "100%" }}>
-                  <FormLabel id="menu-label" sx={{ textAlign: "left" }}>
+                  <FormLabel
+                    id="menu-label"
+                    sx={{
+                      textAlign: "left",
+                      color: radioValueMenu === null ? "error.main" : "inherit",
+                    }}
+                  >
                     Intolerancias alimentarias
                   </FormLabel>
                   <RadioGroup
@@ -123,7 +281,7 @@ function App() {
                     aria-labelledby="menu-label"
                     name="menu-radio-group"
                     value={radioValueMenu}
-                    onChange={handleChangeRadioValueMenu}
+                    onChange={handleChangeRVMenu}
                   >
                     <FormControlLabel
                       value="none"
@@ -152,48 +310,75 @@ function App() {
                       {
                         <TextField
                           fullWidth
-                          sx={{ mt: -2, mb: 2 }}
+                          sx={{ mb: 2 }}
                           id="tf-menu-others"
                           label="Otros (especificar)"
                           variant="standard"
+                          value={foodOther}
+                          onChange={handleChangeFoodOther}
+                          error={validFoodOther === -1}
+                          helperText={
+                            validFoodOther === -1
+                              ? "Por favor indica tu intolerancia alimentaria"
+                              : ""
+                          }
                         />
                       }
                     </Collapse>
                   </RadioGroup>
                 </FormControl>
               </Box>
-              <br />
-              <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-                <DirectionsBusIcon
-                  sx={{ color: "action.active", mr: 2, my: 0.1 }}
-                />
-                <FormControlLabel
-                  control={
-                    <MUISwitchCustom
-                      sx={{ ml: 1 }}
-                      defaultChecked={false}
-                      checked={busSwitchChecked}
-                      onChange={handleBusSwitchChange}
-                    />
-                  }
-                  label="Quiero autobús para asistir al evento"
-                  labelPlacement="start"
-                />
+
+              {/* -> AUTOBÚS <- */}
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{ alignItems: "center", mt: 3 }}
+              >
+                <DirectionsBusIcon sx={{ color: "action.active", mr: 2 }} />
+                <FormLabel
+                  id="bus-label-needed"
+                  sx={{
+                    color:
+                      radioValueBusNeeded === null ? "error.main" : "inherit",
+                  }}
+                >
+                  ¿Necesitas autobús para asistir al evento?
+                </FormLabel>
               </Stack>
-              <Collapse in={busSwitchChecked}>
-                <FormControl sx={{ width: "100%", ml: 5, mt: 1 }}>
+              <RadioGroup
+                row
+                aria-labelledby="bus-label-needed"
+                name="bus-radio-group-needed"
+                value={radioValueBusNeeded}
+                onChange={handleChangeRVBusNeeded}
+                sx={{ mt: 1, ml: 5 }}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Sí" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+
+              <Collapse in={radioValueBusNeeded === "yes"}>
+                <FormControl sx={{ width: "100%", ml: 5, mt: 2 }}>
+                  {/* -> LUGAR SALIDA <- */}
                   <FormLabel
-                    id="bus-label-departure"
-                    sx={{ textAlign: "left" }}
+                    id="bus-label-location"
+                    sx={{
+                      textAlign: "left",
+                      color:
+                        radioValueBusLocation === null
+                          ? "error.main"
+                          : "inherit",
+                    }}
                   >
-                    Sitio de salida del autobús
+                    Lugar de salida del autobús
                   </FormLabel>
                   <RadioGroup
                     row
-                    aria-labelledby="bus-label-departure"
-                    name="bus-radio-group-departure"
-                    value={radioValueBus}
-                    onChange={handleChangeRadioValueBus}
+                    aria-labelledby="bus-label-location"
+                    name="bus-radio-group-location"
+                    value={radioValueBusLocation}
+                    onChange={handleChangeRVBusLocation}
                   >
                     <FormControlLabel
                       value="elx"
@@ -206,18 +391,27 @@ function App() {
                       label="Alicante"
                     />
                   </RadioGroup>
+                </FormControl>
+
+                <FormControl sx={{ width: "100%", ml: 5, mt: 2 }}>
+                  {/* -> TURNO VUELTA <- */}
                   <FormLabel
-                    id="bus-label-return"
-                    sx={{ textAlign: "left", mt: 2 }}
+                    id="bus-label-schedule"
+                    sx={{
+                      color:
+                        radioValueBusSchedule === null
+                          ? "error.main"
+                          : "inherit",
+                    }}
                   >
                     Turno de vuelta del autobús
                   </FormLabel>
                   <RadioGroup
                     row
-                    aria-labelledby="bus-label-return"
-                    name="bus-radio-group-return"
-                    value={radioValueBus}
-                    onChange={handleChangeRadioValueBus}
+                    aria-labelledby="bus-label-schedule"
+                    name="bus-radio-group-schedule"
+                    value={radioValueBusSchedule}
+                    onChange={handleChangeRVBusSchedule}
                   >
                     <FormControlLabel
                       value="first"
@@ -232,6 +426,14 @@ function App() {
                   </RadioGroup>
                 </FormControl>
               </Collapse>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+                <ButtonPrimary
+                  endIcon={<MarkEmailRead />}
+                  onClick={handleSubmit}
+                >
+                  CONFIRMAR ASISTENCIA
+                </ButtonPrimary>
+              </Box>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

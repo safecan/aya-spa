@@ -14,7 +14,7 @@
 
 .form {
   width: 60vw;
-  margin: 0 auto;
+  margin: 0 auto 80px auto;
 }
 
 .title-desktop {
@@ -22,20 +22,62 @@
   margin: 0;
   max-width: 900px;
   display: block;
-  margin: 0 auto;
-  justify-content: center;
-  align-items: center;
+  margin: 20px auto 0 auto;
 }
 
 .title-mobile {
   width: 50%;
-  margin: 0;
   max-width: 900px;
-  display: none;
+}
+
+.location {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+}
+
+.column:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.location .column:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+
+.ronesa-title {
+  width: 20vw;
+  display: block;
+  min-width: 200px;
+  margin: 0 auto;
+}
+
+.schedule {
+  width: 40vw;
+  display: block;
+  margin: auto;
+  min-width: 300px;
+  max-width: 400px;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
+  .location {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 900px) {
   #root {
     padding: 0px;
   }
@@ -46,5 +88,9 @@
 
   .title-desktop {
     scale: 1.25;
+  }
+
+  .schedule {
+    width: 60vw;
   }
 }

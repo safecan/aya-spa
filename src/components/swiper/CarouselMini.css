@@ -1,0 +1,28 @@
+.carousel-mini-container {
+  position: relative;
+  width: 20vw;
+  height: 14.67vw;
+  overflow: hidden;
+  min-width: 300px;
+  min-height: 220px;
+}
+
+.carousel-mini-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}

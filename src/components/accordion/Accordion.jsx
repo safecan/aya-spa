@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
 import "./Accordion.css";

@@ -1,14 +1,12 @@
-import { Scale } from "@mui/icons-material";
 import Button from "@mui/material/Button";
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const ButtonPrimary = styled(Button)(({ theme }) => ({
   // Base styles
-  borderRadius: '100px', // Full rounded border
-  borderWidth: 0,
-  boxShadow: theme.shadows[4], // Medium shadow
+  borderRadius: '20px', // Full rounded border
+  border: '2px solid #d0d0d0dc',
   textTransform: 'none', // Disable uppercase transformation
-  padding: '10px 24px', // Comfortable padding
+  padding: '10px 44px', // Comfortable padding
   fontWeight: 600, // Slightly bolder text
   transition: 'all 0.3s ease', // Smooth transitions
 
@@ -17,11 +15,9 @@ const ButtonPrimary = styled(Button)(({ theme }) => ({
   backgroundColor: "transparent",
   '&:hover': {
     transform: 'scale(1.05)',
-    boxShadow: theme.shadows[6],
   },
   '&:active': {
     backgroundColor: '#91919168',
-    boxShadow: theme.shadows[2], // Smaller shadow when pressed
     transform: 'translateY(2px)', // Slight push down effect
   },
   '&:focus': {
