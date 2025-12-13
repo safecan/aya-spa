@@ -31,9 +31,8 @@ import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 function App() {
+  
   // #region Consts, states and handlers
-
-  // https://assets.albayandreasisposano.com/aya-branch.webp
   const CDN_BASE = "https://assets.albayandreasisposano.com/";
   const imgArrayCarouselAYA = [
     CDN_BASE + "carousel/aya1.webp",
@@ -180,7 +179,7 @@ function App() {
     <>
       <img
         className="title-desktop"
-        src={CDN_BASE + "/aya-title-desktop-s.png"}
+        src={CDN_BASE + "aya-title-desktop-s.png"}
         alt="Alba y Andrea"
       />
 
@@ -195,7 +194,7 @@ function App() {
               <div className="location">
                 <div className="column">
                   <img
-                    src={CDN_BASE + "/aya-ronesa-title.webp"}
+                    src={CDN_BASE + "aya-ronesa-title.webp"}
                     alt="Finca Ronesa"
                     className="ronesa-title"
                   />
@@ -222,7 +221,7 @@ function App() {
             <AccordionHeader FiIcon={FiClock} Title="Itinerario" />
             <AccordionPanel>
               <img
-                src={CDN_BASE + "/aya-schedule-final.png"}
+                src={CDN_BASE + "aya-schedule-final.png"}
                 alt="Itinerario"
                 className="schedule"
               />
