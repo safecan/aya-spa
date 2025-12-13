@@ -31,27 +31,30 @@ import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 function App() {
-  // #region Form state and handlers
+  // #region Consts, states and handlers
+
+  // https://assets.albayandreasisposano.com/aya-branch.webp
+  const CDN_BASE = "https://assets.albayandreasisposano.com/";
   const imgArrayCarouselAYA = [
-    "src/assets/carousel/aya1.webp",
-    "src/assets/carousel/aya2.webp",
-    "src/assets/carousel/aya3.webp",
-    "src/assets/carousel/aya4.webp",
-    "src/assets/carousel/aya5.webp",
-    "src/assets/carousel/aya6.webp",
-    "src/assets/carousel/aya7.webp",
-    "src/assets/carousel/aya8.webp",
-    "src/assets/carousel/aya9.webp",
+    CDN_BASE + "carousel/aya1.webp",
+    CDN_BASE + "carousel/aya2.webp",
+    CDN_BASE + "carousel/aya3.webp",
+    CDN_BASE + "carousel/aya4.webp",
+    CDN_BASE + "carousel/aya5.webp",
+    CDN_BASE + "carousel/aya6.webp",
+    CDN_BASE + "carousel/aya7.webp",
+    CDN_BASE + "carousel/aya8.webp",
+    CDN_BASE + "carousel/aya9.webp",
   ];
 
   const imgArrayCarouselRonesa = [
-    "src/assets/carousel/aya-ronesa1.webp",
-    "src/assets/carousel/aya-ronesa2.webp",
-    "src/assets/carousel/aya-ronesa3.webp",
-    "src/assets/carousel/aya-ronesa4.webp",
-    "src/assets/carousel/aya-ronesa5.webp",
-    "src/assets/carousel/aya-ronesa6.webp",
-    "src/assets/carousel/aya-ronesa7.webp",
+    CDN_BASE + "carousel/aya-ronesa1.webp",
+    CDN_BASE + "carousel/aya-ronesa2.webp",
+    CDN_BASE + "carousel/aya-ronesa3.webp",
+    CDN_BASE + "carousel/aya-ronesa4.webp",
+    CDN_BASE + "carousel/aya-ronesa5.webp",
+    CDN_BASE + "carousel/aya-ronesa6.webp",
+    CDN_BASE + "carousel/aya-ronesa7.webp",
   ];
 
   const [fullName, setFullName] = React.useState("");
@@ -177,7 +180,7 @@ function App() {
     <>
       <img
         className="title-desktop"
-        src="src/assets/aya-title-desktop-s.png"
+        src={CDN_BASE + "/aya-title-desktop-s.png"}
         alt="Alba y Andrea"
       />
 
@@ -192,7 +195,7 @@ function App() {
               <div className="location">
                 <div className="column">
                   <img
-                    src="src/assets/aya-ronesa-title.webp"
+                    src={CDN_BASE + "/aya-ronesa-title.webp"}
                     alt="Finca Ronesa"
                     className="ronesa-title"
                   />
@@ -219,7 +222,7 @@ function App() {
             <AccordionHeader FiIcon={FiClock} Title="Itinerario" />
             <AccordionPanel>
               <img
-                src="src/assets/aya-schedule-final.png"
+                src={CDN_BASE + "/aya-schedule-final.png"}
                 alt="Itinerario"
                 className="schedule"
               />
