@@ -149,29 +149,43 @@ function App() {
 
     console.log("Payload:", payload);
 
-    // sendToAPI(payload);
+    sendToAPI(payload);
   };
 
-  const sendToAPI = async (data) => {
-    try {
-      const response = await fetch("https://your-api.com/endpoint", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+ const sendToAPI = async (data) => {
+  try {
+    // Use relative path for Cloudflare Pages Functions
+    const response = await fetch('/api/rsvp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-      if (!response.ok) throw new Error("Respuesta de red KO");
-
-      const result = await response.json();
-      alert("¡Asistencia confirmada!");
-      // Reset form or redirect
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al confirmar asistencia. Por favor inténtalo de nuevo más tarde.");
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Network response was not ok');
     }
-  };
+
+    alert("¡Asistencia confirmada!");
+    
+    // Reset form after successful submission
+    setFullName('');
+    setValidName(0);
+    setRVMenu('');
+    setFoodOther('');
+    setValidFoodOther(0);
+    setRVBusNeeded('');
+    setRVBusLocation('');
+    setRVBusSchedule('');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert("Error al confirmar asistencia. Por favor inténtalo de nuevo más tarde.");
+  }
+};
+
 
   // #endregion
 
