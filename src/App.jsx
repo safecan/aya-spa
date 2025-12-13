@@ -133,14 +133,14 @@ function App() {
     if (!validateForm()) return;
 
     const payload = {
-      nombre: fullName.trim(),
-      intolerancias:
+      name: fullName.trim(),
+      foodintolerance:
         radioValueMenu === "other" ? foodOther.trim() : radioValueMenu,
       bus:
         radioValueBusNeeded === "yes"
           ? {
-              salida: radioValueBusLocation,
-              vuelta: radioValueBusSchedule,
+              location: radioValueBusLocation,
+              schedule: radioValueBusSchedule,
             }
           : null,
     };
@@ -167,7 +167,7 @@ function App() {
       // Reset form or redirect
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al confirmar asistencia. Por favor intenta de nuevo.");
+      alert("Error al confirmar asistencia. Por favor inténtalo de nuevo más tarde.");
     }
   };
 
