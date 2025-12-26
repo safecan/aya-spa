@@ -4,9 +4,11 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { useTranslation, Trans } from "react-i18next";
 
 import Carousel from "./components/swiper/Carousel";
-import CarouselMini from "./components/swiper/CarouselMini";
+import CarouselMini from "./components/carousel-mini/CarouselMini";
+import ButtonLanguageSwitcher from "./components/button/ButtonLanguageSwitcher";
 import {
   Accordion,
   AccordionItem,
@@ -24,14 +26,17 @@ import {
   Box,
   Collapse,
 } from "@mui/material";
-import { Person, MarkEmailRead, Padding } from "@mui/icons-material";
+import { Person, MarkEmailRead } from "@mui/icons-material";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 function App() {
-  
+  const { t: translate } = useTranslation();
+  const [confirmationSent, setConfirmationSent] = React.useState(false);
+  const [accordionIndex, setAccordionIndex] = React.useState(-1);
+
   // #region Consts, states and handlers
   const CDN_BASE = "https://assets.albayandreasisposano.com/";
   const imgArrayCarouselAYA = [
@@ -152,45 +157,58 @@ function App() {
     sendToAPI(payload);
   };
 
- const sendToAPI = async (data) => {
-  try {
-    // Use relative path for Cloudflare Pages Functions
-    const response = await fetch('/api/rsvp', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const sendToAPI = async (data) => {
+    try {
+      // Use relative path for Cloudflare Pages Functions
+      const response = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Network response was not ok');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Network response was not ok");
+      }
+
+      alert(translate("attendance_confirmed"));
+      setConfirmationSent(true);
+      
+      // Reset form after successful submission
+      setFullName("");
+      setValidName(0);
+      setRVMenu("");
+      setFoodOther("");
+      setValidFoodOther(0);
+      setRVBusNeeded("");
+      setRVBusLocation("");
+      setRVBusSchedule("");
+
+      // Close all accordions
+      setAccordionIndex(-1);
+    } catch (error) {
+      console.error("Error:", error);
+      alert(translate("error_confirming"));
     }
-
-    alert("¡Asistencia confirmada!");
-    
-    // Reset form after successful submission
-    setFullName('');
-    setValidName(0);
-    setRVMenu('');
-    setFoodOther('');
-    setValidFoodOther(0);
-    setRVBusNeeded('');
-    setRVBusLocation('');
-    setRVBusSchedule('');
-    
-  } catch (error) {
-    console.error('Error:', error);
-    alert("Error al confirmar asistencia. Por favor inténtalo de nuevo más tarde.");
-  }
-};
-
+  };
 
   // #endregion
 
   return (
     <>
+      <Box
+        sx={{
+          display: { xs: "none", md: "flex" },
+          position: "fixed",
+          right: 20,
+          zIndex: 1000,
+        }}
+      >
+        <ButtonLanguageSwitcher />
+      </Box>
+
       <img
         className="title-desktop"
         src={CDN_BASE + "aya-title-desktop-s.png"}
@@ -199,11 +217,30 @@ function App() {
 
       <Carousel images={imgArrayCarouselAYA} />
 
+      <Box
+        sx={{
+          display: { xs: "flex", md: "none" },
+          gap: 1,
+          position: "fixed",
+          right: 10,
+          zIndex: 1000,
+        }}
+      >
+        <ButtonLanguageSwitcher />
+      </Box>
+      <Box className="welcome-message">
+        <p className="first">{translate("welcome_message")}</p>
+        <p>{translate("welcome_message2")}</p>
+        <p>{translate("welcome_message3")}</p>
+        <p>{translate("welcome_message4")}</p>
+        <p className="last">{translate("welcome_message5")}</p>
+      </Box>
+
       <div className="form">
-        <Accordion>
+        <Accordion value={accordionIndex} onChange={setAccordionIndex}>
           {/* -> LUGAR <- */}
           <AccordionItem>
-            <AccordionHeader FiIcon={FiMapPin} Title="Lugar" />
+            <AccordionHeader FiIcon={FiMapPin} Title={translate("location")} />
             <AccordionPanel>
               <div className="location">
                 <div className="column">
@@ -213,13 +250,13 @@ function App() {
                     className="ronesa-title"
                   />
                   <div className="ronesa-info">
-                    <p>Barranco de Ronesa, 03109 Tibi, Alicante</p>
+                    <p>{translate("finca_address")}</p>
                     <a
                       href="https://maps.app.goo.gl/Ud8JpthzcA67cJ2f6"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Cómo llegar
+                      {translate("how_to_get_there")}
                     </a>
                   </div>
                 </div>
@@ -232,7 +269,7 @@ function App() {
 
           {/* -> ITINERARIO <- */}
           <AccordionItem>
-            <AccordionHeader FiIcon={FiClock} Title="Itinerario" />
+            <AccordionHeader FiIcon={FiClock} Title={translate("schedule")} />
             <AccordionPanel>
               <img
                 src={CDN_BASE + "aya-schedule-final.png"}
@@ -246,7 +283,7 @@ function App() {
           <AccordionItem>
             <AccordionHeader
               FiIcon={FiCheckSquare}
-              Title="Confirmar Asistencia"
+              Title={translate("confirm_attendance")}
             />
             <AccordionPanel>
               <Box
@@ -269,13 +306,13 @@ function App() {
                 <TextField
                   fullWidth
                   id="tf-fullname"
-                  label="Nombre completo"
+                  label={translate("full_name")}
                   variant="standard"
                   value={fullName}
                   onChange={handleChangeNameValue}
                   error={validName === -1}
                   helperText={
-                    validName === -1 ? "Este campo es obligatorio" : ""
+                    validName === -1 ? translate("required_field") : ""
                   }
                 />
               </Box>
@@ -290,7 +327,7 @@ function App() {
                       color: radioValueMenu === null ? "error.main" : "inherit",
                     }}
                   >
-                    Intolerancias alimentarias
+                    {translate("food_intolerances")}
                   </FormLabel>
                   <RadioGroup
                     sx={{ mt: 1 }}
@@ -302,22 +339,22 @@ function App() {
                     <FormControlLabel
                       value="none"
                       control={<Radio />}
-                      label="Ninguna"
+                      label={translate("none")}
                     />
                     <FormControlLabel
                       value="dairy"
                       control={<Radio />}
-                      label="Intolerante a la lactosa"
+                      label={translate("dairy_intolerant")}
                     />
                     <FormControlLabel
                       value="gluten"
                       control={<Radio />}
-                      label="Intolerante al gluten"
+                      label={translate("gluten_intolerant")}
                     />
                     <FormControlLabel
                       value="other"
                       control={<Radio />}
-                      label="Otros"
+                      label={translate("other")}
                     />
                     <Collapse
                       in={radioValueMenu === "other"}
@@ -328,14 +365,14 @@ function App() {
                           fullWidth
                           sx={{ mb: 2 }}
                           id="tf-menu-others"
-                          label="Otros (especificar)"
+                          label={translate("other_specify")}
                           variant="standard"
                           value={foodOther}
                           onChange={handleChangeFoodOther}
                           error={validFoodOther === -1}
                           helperText={
                             validFoodOther === -1
-                              ? "Por favor indica tu intolerancia alimentaria"
+                              ? translate("specify_intolerance")
                               : ""
                           }
                         />
@@ -359,7 +396,7 @@ function App() {
                       radioValueBusNeeded === null ? "error.main" : "inherit",
                   }}
                 >
-                  ¿Necesitas autobús para asistir al evento?
+                  {translate("bus_needed")}
                 </FormLabel>
               </Stack>
               <RadioGroup
@@ -370,8 +407,16 @@ function App() {
                 onChange={handleChangeRVBusNeeded}
                 sx={{ mt: 1, ml: 5 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Sí" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value="yes"
+                  control={<Radio />}
+                  label={translate("yes")}
+                />
+                <FormControlLabel
+                  value="no"
+                  control={<Radio />}
+                  label={translate("no")}
+                />
               </RadioGroup>
 
               <Collapse in={radioValueBusNeeded === "yes"}>
@@ -387,7 +432,7 @@ function App() {
                           : "inherit",
                     }}
                   >
-                    Lugar de salida del autobús
+                    {translate("bus_departure_location")}
                   </FormLabel>
                   <RadioGroup
                     row
@@ -399,12 +444,12 @@ function App() {
                     <FormControlLabel
                       value="elx"
                       control={<Radio />}
-                      label="Elche"
+                      label={translate("elche")}
                     />
                     <FormControlLabel
                       value="alc"
                       control={<Radio />}
-                      label="Alicante"
+                      label={translate("alicante")}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -420,7 +465,7 @@ function App() {
                           : "inherit",
                     }}
                   >
-                    Turno de vuelta del autobús
+                    {translate("bus_return_schedule")}
                   </FormLabel>
                   <RadioGroup
                     row
@@ -432,12 +477,12 @@ function App() {
                     <FormControlLabel
                       value="first"
                       control={<Radio />}
-                      label="Primer turno"
+                      label={translate("first_shift")}
                     />
                     <FormControlLabel
                       value="second"
                       control={<Radio />}
-                      label="Segundo turno"
+                      label={translate("second_shift")}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -447,12 +492,23 @@ function App() {
                   endIcon={<MarkEmailRead />}
                   onClick={handleSubmit}
                 >
-                  CONFIRMAR ASISTENCIA
+                  {translate("confirm_button")}
                 </ButtonPrimary>
               </Box>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
+
+        {/* -> MENSAJE DESPEDIDA <- */}
+        <Collapse in={confirmationSent} className="thanks-message">
+          <img
+            src={CDN_BASE + "aya-thanks.jpeg"}
+            alt={translate("thanks_message")}
+            className="thanks-image"
+          />
+
+          <p>{translate("thanks_message")}</p>
+        </Collapse>
       </div>
     </>
   );

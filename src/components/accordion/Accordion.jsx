@@ -6,23 +6,39 @@ import "./Accordion.css";
 const AccordionContext = React.createContext({});
 const useAccordion = () => React.useContext(AccordionContext);
 
-function Accordion({ children, multiple, defaultIndex }) {
-  const [activeIndex, setActiveIndex] = React.useState(
+function Accordion({ children, multiple, defaultIndex, value, onChange }) {
+  const isControlled = value !== undefined;
+  const [internalActiveIndex, setInternalActiveIndex] = React.useState(
     multiple ? [defaultIndex] : defaultIndex
   );
 
-  function onChangeIndex(index) {
-    setActiveIndex((currentActiveIndex) => {
-      if (!multiple) {
-        return index === activeIndex ? -1 : index;
-      }
+  const activeIndex = isControlled ? value : internalActiveIndex;
 
-      if (currentActiveIndex.includes(index)) {
-        return currentActiveIndex.filter((i) => i !== index);
+  function handleChangeIndex(index) {
+    if (!multiple) {
+      const newValue = index === activeIndex ? -1 : index;
+      if (isControlled) {
+        onChange?.(newValue);
+      } else {
+        setInternalActiveIndex(newValue);
       }
+      return;
+    }
 
-      return currentActiveIndex.concat(index);
-    });
+    // Multiple mode
+    const currentArray = Array.isArray(activeIndex) ? activeIndex : [];
+    let newValue;
+    if (currentArray.includes(index)) {
+      newValue = currentArray.filter((i) => i !== index);
+    } else {
+      newValue = [...currentArray, index];
+    }
+    
+    if (isControlled) {
+      onChange?.(newValue);
+    } else {
+      setInternalActiveIndex(newValue);
+    }
   }
 
   return React.Children.map(children, (child, index) => {
@@ -32,7 +48,7 @@ function Accordion({ children, multiple, defaultIndex }) {
         : activeIndex === index;
 
     return (
-      <AccordionContext.Provider value={{ isActive, index, onChangeIndex }}>
+      <AccordionContext.Provider value={{ isActive, index, onChangeIndex: handleChangeIndex }}>
         {child}
       </AccordionContext.Provider>
     );

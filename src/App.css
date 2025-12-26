@@ -12,9 +12,30 @@
   color: #888;
 }
 
+.welcome-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.5em;
+  width: 60vw;
+  text-align: center;
+  margin: 0px auto 40px auto;
+
+  .first {
+    font-weight: bold;
+  }
+
+  .last {
+    font-weight: bold;
+    font-size: large;
+  }
+}
+
 .form {
   width: 60vw;
-  margin: 0 auto 80px auto;
+  margin: 40px auto 80px auto;
 }
 
 .title-desktop {
@@ -67,6 +88,26 @@
   margin: auto;
   min-width: 300px;
   max-width: 400px;
+}
+
+.thanks-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 80px;
+}
+
+.thanks-image {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  width: 20vw;
+  height: 14.67vw;
+  overflow: hidden;
+  min-width: 300px;
+  min-height: 220px;
 }
 
 /* Responsive adjustments */

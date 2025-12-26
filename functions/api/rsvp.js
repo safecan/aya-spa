@@ -85,14 +85,14 @@ async function handleGetRsvps(request, env) {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error: ' + error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
 
 // Handle CORS preflight
-export async function onRequestOptions(context) {
+export async function onRequestOptions() {
   return new Response(null, {
     headers: {
       'Access-Control-Allow-Origin': '*',

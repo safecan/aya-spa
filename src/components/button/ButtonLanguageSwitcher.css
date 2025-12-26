@@ -1,0 +1,37 @@
+.flag-active {
+  height: 18px;
+  width: 27px;
+  border-radius: 4px;
+  margin-top: -4px;
+  margin-right: 4px;
+  z-index: 950;
+}
+
+.flag-inactive {
+  height: 14px;
+  width: 21px;
+  border-radius: 4px;
+  margin-top: 8px;
+  margin-left: -6px;
+  z-index: 900;
+}
+
+@media (max-width: 900px) {
+  .flag-active {
+    height: 12px;
+    width: 18px;
+    border-radius: 2px;
+    margin-top: -4px;
+    margin-right: 4px;
+    z-index: 950;
+  }
+
+  .flag-inactive {
+    height: 9px;
+    width: 14px;
+    border-radius: 2px;
+    margin-top: 8px;
+    margin-left: -6px;
+    z-index: 900;
+  }
+}
