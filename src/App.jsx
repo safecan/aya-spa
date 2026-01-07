@@ -4,7 +4,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import Carousel from "./components/swiper/Carousel";
 import CarouselMini from "./components/carousel-mini/CarouselMini";
@@ -33,7 +33,7 @@ import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 function App() {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const [confirmationSent, setConfirmationSent] = React.useState(false);
   const [accordionIndex, setAccordionIndex] = React.useState(-1);
 
@@ -60,6 +60,18 @@ function App() {
     CDN_BASE + "carousel/aya-ronesa6.webp",
     CDN_BASE + "carousel/aya-ronesa7.webp",
   ];
+
+  const StyledRadio = (props) => (
+    <Radio
+      sx={{
+        color: "grey", // unselected
+        "&.Mui-checked": {
+          color: "#6a61be", // selected
+        },
+      }}
+      {...props}
+    />
+  );
 
   const [fullName, setFullName] = React.useState("");
   const [validName, setValidName] = React.useState(0);
@@ -175,7 +187,7 @@ function App() {
 
       alert(translate("attendance_confirmed"));
       setConfirmationSent(true);
-      
+
       // Reset form after successful submission
       setFullName("");
       setValidName(0);
@@ -188,6 +200,13 @@ function App() {
 
       // Close all accordions
       setAccordionIndex(-1);
+
+      // Scroll to thanks image
+      setTimeout(() => {
+        document
+          .getElementById("thanks-image")
+          .scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 400);
     } catch (error) {
       console.error("Error:", error);
       alert(translate("error_confirming"));
@@ -212,6 +231,12 @@ function App() {
       <img
         className="title-desktop"
         src={CDN_BASE + "aya-title-desktop-s.png"}
+        alt="Alba y Andrea"
+      />
+
+      <img
+        className="title-mobile"
+        src={CDN_BASE + "aya-title-mobile.png"}
         alt="Alba y Andrea"
       />
 
@@ -244,11 +269,17 @@ function App() {
             <AccordionPanel>
               <div className="location">
                 <div className="column">
-                  <img
-                    src={CDN_BASE + "aya-ronesa-title.webp"}
-                    alt="Finca Ronesa"
-                    className="ronesa-title"
-                  />
+                  <a
+                    href="https://maps.app.goo.gl/Ud8JpthzcA67cJ2f6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={CDN_BASE + "aya-ronesa-title.webp"}
+                      alt="Finca Ronesa"
+                      className="ronesa-title"
+                    />
+                  </a>
                   <div className="ronesa-info">
                     <p>{translate("finca_address")}</p>
                     <a
@@ -272,7 +303,9 @@ function App() {
             <AccordionHeader FiIcon={FiClock} Title={translate("schedule")} />
             <AccordionPanel>
               <img
-                src={CDN_BASE + "aya-schedule-final.png"}
+                src={
+                  CDN_BASE + "aya-schedule-" + i18n.language + ".png"
+                }
                 alt="Itinerario"
                 className="schedule"
               />
@@ -314,6 +347,14 @@ function App() {
                   helperText={
                     validName === -1 ? translate("required_field") : ""
                   }
+                  sx={{
+                    "& .MuiInput-underline:after": {
+                      borderBottomColor: "#6a61be",
+                    },
+                    "& label.Mui-focused": {
+                      color: "#6a61be",
+                    },
+                  }}
                 />
               </Box>
               {/* -> INTOLERANCIAS <- */}
@@ -325,6 +366,9 @@ function App() {
                     sx={{
                       textAlign: "left",
                       color: radioValueMenu === null ? "error.main" : "inherit",
+                      "&.Mui-focused": {
+                        color: "#6a61be",
+                      },
                     }}
                   >
                     {translate("food_intolerances")}
@@ -338,22 +382,22 @@ function App() {
                   >
                     <FormControlLabel
                       value="none"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("none")}
                     />
                     <FormControlLabel
                       value="dairy"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("dairy_intolerant")}
                     />
                     <FormControlLabel
                       value="gluten"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("gluten_intolerant")}
                     />
                     <FormControlLabel
                       value="other"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("other")}
                     />
                     <Collapse
@@ -363,7 +407,6 @@ function App() {
                       {
                         <TextField
                           fullWidth
-                          sx={{ mb: 2 }}
                           id="tf-menu-others"
                           label={translate("other_specify")}
                           variant="standard"
@@ -375,6 +418,15 @@ function App() {
                               ? translate("specify_intolerance")
                               : ""
                           }
+                          sx={{
+                            mb: 2,
+                            "& .MuiInput-underline:after": {
+                              borderBottomColor: "#6a61be",
+                            },
+                            "& label.Mui-focused": {
+                              color: "#6a61be",
+                            },
+                          }}
                         />
                       }
                     </Collapse>
@@ -393,7 +445,11 @@ function App() {
                   id="bus-label-needed"
                   sx={{
                     color:
-                      radioValueBusNeeded === null ? "error.main" : "inherit",
+                      radioValueBusNeeded === null
+                        ? "error.main"
+                        : radioValueBusNeeded
+                        ? "#6a61be"
+                        : "inherit",
                   }}
                 >
                   {translate("bus_needed")}
@@ -409,12 +465,12 @@ function App() {
               >
                 <FormControlLabel
                   value="yes"
-                  control={<Radio />}
+                  control={<StyledRadio />}
                   label={translate("yes")}
                 />
                 <FormControlLabel
                   value="no"
-                  control={<Radio />}
+                  control={<StyledRadio />}
                   label={translate("no")}
                 />
               </RadioGroup>
@@ -426,6 +482,9 @@ function App() {
                     id="bus-label-location"
                     sx={{
                       textAlign: "left",
+                      "&.Mui-focused": {
+                        color: "#6a61be",
+                      },
                       color:
                         radioValueBusLocation === null
                           ? "error.main"
@@ -443,12 +502,12 @@ function App() {
                   >
                     <FormControlLabel
                       value="elx"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("elche")}
                     />
                     <FormControlLabel
                       value="alc"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("alicante")}
                     />
                   </RadioGroup>
@@ -459,6 +518,9 @@ function App() {
                   <FormLabel
                     id="bus-label-schedule"
                     sx={{
+                      "&.Mui-focused": {
+                        color: "#6a61be",
+                      },
                       color:
                         radioValueBusSchedule === null
                           ? "error.main"
@@ -476,12 +538,12 @@ function App() {
                   >
                     <FormControlLabel
                       value="first"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("first_shift")}
                     />
                     <FormControlLabel
                       value="second"
-                      control={<Radio />}
+                      control={<StyledRadio />}
                       label={translate("second_shift")}
                     />
                   </RadioGroup>

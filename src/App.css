@@ -21,7 +21,7 @@
   line-height: 1.5em;
   width: 60vw;
   text-align: center;
-  margin: 0px auto 40px auto;
+  margin: 20px auto 40px auto;
 
   .first {
     font-weight: bold;
@@ -47,8 +47,12 @@
 }
 
 .title-mobile {
-  width: 50%;
+  width: 80%;
+  margin: 0;
   max-width: 900px;
+  display: block;
+  margin: 20px auto 0 auto;
+  display: none
 }
 
 .location {
@@ -85,7 +89,7 @@
 .schedule {
   width: 40vw;
   display: block;
-  margin: auto;
+  margin: 0 auto 20px auto;
   min-width: 300px;
   max-width: 400px;
 }
@@ -133,5 +137,13 @@
 
   .schedule {
     width: 60vw;
+  }
+
+  .title-desktop {
+    display: none;
+  }
+  
+  .title-mobile {
+    display: block;
   }
 }

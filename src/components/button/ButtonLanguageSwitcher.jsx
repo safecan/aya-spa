@@ -23,7 +23,7 @@ function ButtonLanguageSwitcher() {
     transition: "all 0.3s ease",
 
     color: "#979797e0",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
     "&:hover": {
       transform: "scale(1.05)",
     },
