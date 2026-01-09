@@ -49,6 +49,7 @@ function App() {
     CDN_BASE + "carousel/aya7.webp",
     CDN_BASE + "carousel/aya8.webp",
     CDN_BASE + "carousel/aya9.webp",
+    CDN_BASE + "carousel/aya10.webp",
   ];
 
   const imgArrayCarouselRonesa = [
